@@ -1,0 +1,248 @@
+#!bin/bash
+
+
+#le code source de l'application "initdev"
+
+ #le code source de l'application help
+
+if test $1 = "-help" 
+then
+
+#son nom
+
+echo "NOM : initdev. "
+
+
+#sa description
+
+echo "DESCRIPTION : applique un ensemble de pré-configurations : l’initialisation d’un dépôt
+git, l’ajout d’un fichier ".gitignore", la désignation d’une licence, la création d’un premier fichier source dans le
+dossier du projet avec un code minimal selon le type du projet (C, Latex, python ou cpp) pour l'initialisation ainsi que l'organisation d'un projet."
+ 
+
+#sa syntaxe
+
+echo "SYNTAXE : initdev [argm1] [argm2] [argm3] [argm4]. "
+
+#liste des arguments et une petite description
+
+echo "ARGS : 1/ nom_rép : représente le nom du projet.
+2/ ext : représente le type de projet.
+3/ lic : représente le type de license                   
+4/ git : représente le depot installer. "
+
+#information sur l'auteur de l'application
+echo "AUTEUR :
+-Nom : TOUIL.
+-Prénom : Lynda.
+-Mail : lyndatouil@gmail.com. "
+
+
+else 
+
+#Création des répertoires demandés dans la partie 3 du projet "structure du projet initdev"
+
+mkdir bin
+mkdir sources 
+mkdir gitignores
+mkdir makefiles
+mkdir licenses
+ 
+
+#Tester si l'utilisateur a donné un nom a son projet
+
+if test -z $1 
+then echo "Expected arguments, please check the help : initdev -help  
+1 (échec)" ;   #message d'erreur (argm 1 vide )
+
+
+#Tester si l'utilisateur a donné un deuxieme argument
+
+elif test -z $2 
+then  
+echo " Unknown arguments, please check the help : initdev –help " 
+echo " 1 (echec) "   #message d'érreur (argm 2 vide)
+
+
+#Création des fichiers 
+
+mkdir $1
+cd $1
+touch main 
+touch LICENSE 
+touch Makefile 
+echo "0 (succés)"      #message de bonne création
+
+
+#pour créer les fichiers demandés vide
+
+else 
+mkdir $1 
+cd $1 
+touch main 
+touch LICENSE 
+touch Makefile
+
+#Pour lire les arguments dans n'importe quel ordre (extention, license, nom_rep ou depot)
+ 
+for i in $2 $3 $4
+do         #corps de la premiere boucle
+
+
+#SOURCES
+#Tester l'extention * pour renommer le fichier main à main.* ensuite copier de code minimal qui convient dans le fichier sorces du "projet-1" 
+
+if [ $i = "c" ]        
+then mv main main.c
+     cp /home/lynda/Bureau/initdev/sources/main.c /home/lynda/projet-1/$1/main.c
+
+elif [ $i = "py" ];
+then mv main main.py 
+     cp /home/lynda/Bureau/initdev/sources/main.py /home/lynda/projet-1/$1/main.py
+
+elif [ $i = "latex" ];
+then mv main latexMin.tex
+     cp /home/lynda/Bureau/initdev/sources/latexMin.tex /home/lynda/projet-1/$1/latexMin.tex
+
+elif [ $i = "cpp" ];
+then mv main main.cpp
+     cp /home/lynda/Bureau/initdev/sources/main.cpp /home/lynda/projet-1/$1/main.cpp
+
+elif [ $i = "beamer" ];
+then mv main beamer.tex
+     cp /home/lynda/Bureau/initdev/sources/beamer.tex /home/lynda/projet-1/$1/beamer.tex
+
+elif [ $i = "c++" ];
+then mv main main.cpp
+     cp /home/lynda/Bureau/initdev/sources/main.cpp /home/lynda/projet-1/$1/main.cpp
+
+fi
+  
+#Pour lire les arguments dans n'importe quel ordre (extention, license, nom_rep ou depot)
+
+for i in $2 $3 $4 
+do    #corps de la deuxieme boucle
+
+#LICENSE
+#Tester le type de lisence pour copier le code minimal dans le fichier LICENSE puis le renommer à GPL et le deplacer au répertoire lisences du "projet-1"
+
+if test $i = "GPL" ;
+then touch main     #si on donne pas d'extention on créera     un fichier main vide
+     cp /home/lynda/Bureau/initdev/licenses/GPL /home/lynda/projet-1/$1/LICENSE
+     mv LICENSE GPL
+     mv /home/lynda/projet-1/$1/GPL /home/lynda/projet-1/licenses 
+
+elif test $i = "MIT" ;
+then touch main
+     cp /home/lynda/Bureau/initdev/licenses/MIT /home/lynda/projet-1/$1/LICENSE 
+     mv LICENSE MIT
+     mv /home/lynda/projet-1/$1/MIT /home/lynda/projet-1/licenses 
+
+fi
+
+
+#Pour lire les arguments dans n'importe quel ordre
+
+for i in $2 $3 $4
+do    #corps de la troisieme boucle 
+
+
+#DEPOT GIT
+#Tester le depot entré ensuite créer un fichier caché 
+
+if test $i = "git"
+then touch .gitignore
+fi
+
+done      #fin de la troisieme boucle
+
+
+#copier le code minimal des fichiers gitignore  selon leurs extentions dans "projet-1"
+
+if test -e main.c
+then cp /home/lynda/Bureau/initdev/gitignores/c /home/lynda/projet-1/gitignores
+ 
+elif test -e main.cpp
+then cp /home/lynda/Bureau/initdev/gitignores/cpp /home/lynda/projet-1/gitignores
+
+elif test -e main.py
+then cp /home/lynda/Bureau/initdev/gitignores/py /home/lynda/projet-1/gitignores
+
+elif test -e latexMin.tex
+then cp /home/lynda/Bureau/initdev/gitignores/tex /home/lynda/projet-1/gitignores
+
+elif test -e beamer.tex
+then cp /home/lynda/Bureau/initdev/gitignores/tex /home/lynda/projet-1/gitignores
+
+fi
+  
+done     #fin de la deuxieme boucle
+
+done     #fin de la premiere boucle
+
+
+#tester si main.* a été bien créé puis le deplacé dans le répertoire sources de "projet-1"
+
+if test -e main.c 
+then echo "0 (succés)"   #création du fichier main.* 
+     mv /home/lynda/projet-1/$1/main.c /home/lynda/projet-1/sources
+
+elif test -e main.cpp
+then echo "0 (succés)" 
+mv /home/lynda/projet-1/$1/main.cpp /home/lynda/projet-1/sources 
+
+elif test -e main.py
+then echo "0 (succés)"
+mv /home/lynda/projet-1/$1/main.py /home/lynda/projet-1/sources
+
+elif test -e latekMin.tex
+then echo "0 (succés)"
+mv /home/lynda/projet-1/$1/latexMin.tex /home/lynda/projet-1/sources
+
+elif test -e beamer.tex 
+then echo "0 (succés)"
+mv /home/lynda/projet-1/$1/beamer.tex /home/lynda/projet-1/$1/sources
+
+else echo "Uknown arguments, please check the help : initdev –help. " 
+echo " 1 (échec)."   #message d'erreur ( fichier main.* non créer )
+
+fi
+
+
+#tester si le fichier main est créé
+
+if test -e main 
+then echo "0 (succés)"
+else echo "Uknown arguments, please check the help : initdev –help. " 
+     echo " 1 (échec)."
+fi
+
+
+#tester si gitignore a été crée
+
+if test -s gitignore
+then echo " You must set project type, please check the help : initdev –help "
+     echo "1 (echec) "    #message d'erreur (langage du projet non préciser)
+ 
+    
+else echo "0 (succes) "    #message de confirmation de création de depot 
+
+fi
+
+fi
+
+
+#deplacement du fichier Makefile au répertoire de "projet-1" 
+
+mv /home/lynda/projet-1/$1/Makefile /home/lynda/projet-1/makefiles
+
+
+#copier le code source de l'application initdev dans un fichier main.sh
+
+cd /home/lynda/projet-1
+touch main.sh
+cp /home/lynda/projet-1/initdev /home/lynda/projet-1/main.sh
+
+fi      #fin du premier if
+
+
